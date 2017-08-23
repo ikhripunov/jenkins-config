@@ -1,4 +1,5 @@
 dashboard-view:latest
+kubernetes:latest
 cloudbees-folder:latest
 antisamy-markup-formatter:latest
 build-name-setter:latest
