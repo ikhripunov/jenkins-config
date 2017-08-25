@@ -22,7 +22,7 @@
         <org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
           <inheritFrom></inheritFrom>
           <name>slave</name>
-          <namespace></namespace>
+          <namespace>jenkins</namespace>
           <privileged>false</privileged>
           <alwaysPullImage>false</alwaysPullImage>
           <instanceCap>2147483647</instanceCap>
