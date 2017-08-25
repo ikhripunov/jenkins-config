@@ -69,7 +69,7 @@
       </templates>
       <serverUrl>https://${MY_HOST_IP}:8443</serverUrl>
       <skipTlsVerify>false</skipTlsVerify>
-      <namespace>default</namespace>
+      <namespace>jenkins</namespace>
       <jenkinsUrl>http://${MY_POD_IP}:8080</jenkinsUrl>
       <containerCap>10</containerCap>
       <retentionTimeout>5</retentionTimeout>
