@@ -37,6 +37,10 @@ spec:
         volumeMounts:
         - mountPath: /usr/share/jenkins/ref
           name: ref-volume
+        lifecycle:
+          postStart:
+            exec: 
+              command: ["/bin/sh", "-c", "/usr/share/jenkins/ref/jenkins-config/wait-for-jenkins-and-run-job.sh test"]
       initContainers:
       - name: clone-repo
         image: jenkins/jenkins:lts
@@ -71,6 +75,15 @@ spec:
           - /bin/sh
           - -c
           - cp /usr/share/jenkins/ref/jenkins-config/config.xml.override /usr/share/jenkins/ref/config.xml.override && /usr/share/jenkins/ref/jenkins-config/hack-jenkins-env.sh
+        volumeMounts:
+        - mountPath: /usr/share/jenkins/ref
+          name: ref-volume
+      - name: copy-jobs
+        image: jenkins/jenkins:lts
+        command: 
+          - /bin/sh
+          - -c
+          - cp -r /usr/share/jenkins/ref/jenkins-config/jobs /usr/share/jenkins/ref/
         volumeMounts:
         - mountPath: /usr/share/jenkins/ref
           name: ref-volume
