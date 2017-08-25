@@ -34,14 +34,6 @@ spec:
         env:
         - name: JAVA_OPTS
           value: "-Djenkins.install.runSetupWizard=false"
-        - name: MY_POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
-        - name: MY_HOST_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.hostIP
         volumeMounts:
         - mountPath: /usr/share/jenkins/ref
           name: ref-volume
@@ -66,10 +58,19 @@ spec:
           name: ref-volume
       - name: override-config
         image: jenkins/jenkins:lts
+        env:
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: MY_HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
         command: 
           - /bin/sh
           - -c
-          - cp /usr/share/jenkins/ref/jenkins-config/config.xml.override /usr/share/jenkins/ref/config.xml.override
+          - cp /usr/share/jenkins/ref/jenkins-config/config.xml.override /usr/share/jenkins/ref/config.xml.override && /usr/share/jenkins/ref/jenkins-config/hack-jenkins-env.sh
         volumeMounts:
         - mountPath: /usr/share/jenkins/ref
           name: ref-volume
