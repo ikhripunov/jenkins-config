@@ -28,7 +28,7 @@
           <instanceCap>2147483647</instanceCap>
           <slaveConnectTimeout>100</slaveConnectTimeout>
           <idleMinutes>0</idleMinutes>
-          <label>foobar</label>
+          <label>k8s-slave</label>
           <nodeSelector></nodeSelector>
           <nodeUsageMode>EXCLUSIVE</nodeUsageMode>
           <customWorkspaceVolumeEnabled>false</customWorkspaceVolumeEnabled>
@@ -38,7 +38,7 @@
           <volumes/>
           <containers>
             <org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
-              <name>foo</name>
+              <name>k8s-slave</name>
               <image>jenkinsci/jnlp-slave</image>
               <privileged>false</privileged>
               <alwaysPullImage>false</alwaysPullImage>

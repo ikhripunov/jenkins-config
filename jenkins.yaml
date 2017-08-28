@@ -37,20 +37,27 @@ spec:
         volumeMounts:
         - mountPath: /usr/share/jenkins/ref
           name: ref-volume
+        - mountPath: /var/jenkins_home/.ssh
+          name: ssh-volume
         lifecycle:
           postStart:
             exec: 
-              command: ["/bin/sh", "-c", "/usr/share/jenkins/ref/jenkins-config/wait-for-jenkins-and-run-job.sh test"]
+              command: ["/bin/sh", "-c", "/usr/share/jenkins/ref/jenkins-config/scripts/wait-for-jenkins-and-run-job.sh test"]
       initContainers:
       - name: clone-repo
         image: jenkins/jenkins:lts
         command: 
           - /bin/sh
           - -c
-          - cd /usr/share/jenkins/ref && git clone https://github.com/ikhripunov/jenkins-config.git
+          - cp /etc/secret-volume/ssh-privatekey ~/.ssh/id_rsa;cp /etc/secret-volume/ssh-publickey ~/.ssh/id_rsa.pub;chmod 400 ~/.ssh/*;printf "host github.com\n HostName github.com\n IdentityFile ~/.ssh/id_rsa\n User jenkins" > ~/.ssh/config;ssh-keyscan github.com >> ~/.ssh/known_hosts;cd /usr/share/jenkins/ref && git clone git@github.com:ikhripunov/jenkins-config.git
         volumeMounts:
         - mountPath: /usr/share/jenkins/ref
           name: ref-volume
+        - mountPath: /etc/secret-volume
+          name: secret-volume
+          readOnly: true
+        - mountPath: /var/jenkins_home/.ssh
+          name: ssh-volume
       - name: install-plugins
         image: jenkins/jenkins:lts
         command: 
@@ -74,7 +81,7 @@ spec:
         command: 
           - /bin/sh
           - -c
-          - cp /usr/share/jenkins/ref/jenkins-config/config.xml.override /usr/share/jenkins/ref/config.xml.override && /usr/share/jenkins/ref/jenkins-config/hack-jenkins-env.sh
+          - cp /usr/share/jenkins/ref/jenkins-config/config.xml.override /usr/share/jenkins/ref/config.xml.override && /usr/share/jenkins/ref/jenkins-config/scripts/hack-jenkins-env.sh
         volumeMounts:
         - mountPath: /usr/share/jenkins/ref
           name: ref-volume
@@ -90,3 +97,8 @@ spec:
       volumes:
       - name: ref-volume
         emptyDir: {}
+      - name: ssh-volume
+        emptyDir: {}
+      - name: secret-volume
+        secret:
+          secretName: ssh-key-secret
